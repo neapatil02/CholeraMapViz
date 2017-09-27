@@ -276,6 +276,7 @@ d3.selectAll("rect").on("click",function (d,e) { columnClick(d,e);
 
 function  sliderChangeEvent(value)
 {
+  resetChart();
   var minRangeDate = format.parse(deathDays[value[ 0 ]].Date + "-1854");
   var maxRangeDate = format.parse(deathDays[value[ 1 ]].Date + "-1854");
    d3.selectAll('d3-slider-handle').attr('margin-left','0em');
@@ -378,18 +379,22 @@ var w = 1000;
       
 }
 
-function columnClick (d,e) {
-  var bar = d3.select(".bar-"+e);
+function resetChart () {
+  debugger;
   $("rect.column-selected").removeClass("column-selected");
   $("rect").each(function  (d) {
   $(this).attr("fill","rgb(0, 0, " + Math.round(+$(this).attr("nos") * 10)+ ")");
 });
-  $(".bar-"+e).addClass("column-selected");
+}
+
+function columnClick (d,e) {
+  var bar = d3.select(".bar-"+e);
+  resetChart();
+ 
    var axs = d3.svg.axis().ticks(42).tickFormat(tickFormatter);
    $("rect.column-selected").attr("fill","rgb(0, 0, " + Math.round(+d.Nos * 10) + ")");
-bar.attr("class","column-selected").attr("fill","red");
 
- d3.select("#slider").property("value", [+e,+e]);
+
 $('#slider').empty();
 $("#slider").attr("style","width:970px");
  slidr = d3.slider()
@@ -406,7 +411,8 @@ $("#slider").attr("style","width:970px");
    d3.select('#slider3textmin').text(deathDays[0].Date);
     d3.select('#slider3textmax').text(deathDays[deathDays.length-1].Date);
 sliderChangeEvent([+e,+e]);
-
+ $(".bar-"+e).addClass("column-selected");
+ bar.attr("fill","red");
 }
     </script>
 
