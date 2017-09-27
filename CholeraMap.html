@@ -287,7 +287,14 @@ svgContainer.selectAll('circle.deathPoint-f').remove();
 svgContainer.selectAll('circle.deathPoint').remove();
 var deathsInRange = [];
 var deathsOutOfRange = [];
-
+$(deathDays).each(function  (i,d) { 
+debugger;
+if(i >= value[0] && i<=value[1])
+{
+  $(".bar-"+i).addClass("column-selected");
+ $(".bar-"+i).attr("fill","red");
+}
+});
          svgContainer.selectAll("circle")
                .data(deathData)
                .enter()
