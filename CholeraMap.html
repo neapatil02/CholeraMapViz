@@ -48,7 +48,17 @@ margin-left: 0em;
     border-radius: 8px;     
     pointer-events: none;     
 }
+
     </style>
+    <style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
+.tg .tg-tzxn{background-color:#1b9e77;vertical-align:top}
+.tg .tg-u012{background-color:#e7298a;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+.tg .tg-8j8s{background-color:#1f78b4;color:#1f78b4;vertical-align:top}
+</style>
 </head>
 <body>
 <div id='chart'></div>
@@ -57,10 +67,27 @@ margin-left: 0em;
  <div id='start' style='width:50px;text-align:left;display:inline-block;'>19-Aug</div><div style="width:880px !important;text-align:center;display:inline-block;"> View Deaths between <span id='slider3textmin'></span> and <span id='slider3textmax'></span></div>
  <div id='end' style='width:60px;text-align:right;display:inline;'>29-Sept</div>
 </div>
-<div id='map' style='width:970px;text-align:center;'></div>
-    <div><p style='color:rgb(31, 120, 180);font-weight:bold;'>Pumps</p></div>
-<div ><p style='color:rgb(27, 158, 119);font-weight:bold;'>Male Deaths</p></div>
-<div><p style='color:rgb(231, 41, 138);font-weight:bold;'>Female Deaths</p></div>
+<div>
+<div id='map' style='width:970px;height:600px;text-align:center;display:inline-block'></div>
+<div style='display:inline-block;text-align:top;height:600px'><table class="tg">
+  <tr>
+    <th class="tg-yw4l">Color</th>
+    <th class="tg-yw4l">Location of</th>
+  </tr>
+  <tr>
+    <td class="tg-8j8s"></td>
+    <td class="tg-yw4l">Water Pumps</td>
+  </tr>
+  <tr>
+    <td class="tg-tzxn"></td>
+    <td class="tg-yw4l">Death of Male person</td>
+  </tr>
+  <tr>
+    <td class="tg-u012"></td>
+    <td class="tg-yw4l">Death of Female Person</td>
+  </tr>
+</table></div>
+</div>
 <div id='doc'><h4>Documentation</h4
 <a href="https://drive.google.com/open?id=1V871XDhmbudFaR1YX6GMI-BDBQ6MZOx83t8T8zVkOrs" target='_blank' 
 download
@@ -249,7 +276,6 @@ d3.selectAll("rect").on("click",function (d,e) { columnClick(d,e);
 
 function  sliderChangeEvent(value)
 {
-  debugger;
   var minRangeDate = format.parse(deathDays[value[ 0 ]].Date + "-1854");
   var maxRangeDate = format.parse(deathDays[value[ 1 ]].Date + "-1854");
    d3.selectAll('d3-slider-handle').attr('margin-left','0em');
@@ -322,8 +348,11 @@ var w = 1000;
          .attr("height", function(d) {
             return yScale(+d.Nos);
          })
-           .attr("class",function (d,i) { return "bar-"+i;
+           .attr("class",function (d,i) { return "bar-"+i ;
          })
+           .attr("nos",function (d,i) {
+            return d.Nos;
+           })
          .attr("fill", function(d) {
           return "rgb(0, 0, " + Math.round(+d.Nos * 10) + ")";
          });
@@ -349,12 +378,18 @@ var w = 1000;
       
 }
 
-function columnClick (d,e) {debugger;
+function columnClick (d,e) {
   var bar = d3.select(".bar-"+e);
+  $("rect.column-selected").removeClass("column-selected");
+  $("rect").each(function  (d) {
+  $(this).attr("fill","rgb(0, 0, " + Math.round(+$(this).attr("nos") * 10)+ ")");
+});
+  $(".bar-"+e).addClass("column-selected");
    var axs = d3.svg.axis().ticks(42).tickFormat(tickFormatter);
    $("rect.column-selected").attr("fill","rgb(0, 0, " + Math.round(+d.Nos * 10) + ")");
 bar.attr("class","column-selected").attr("fill","red");
-// d3.select("#slider").property("value", [+e,+e]);
+
+ d3.select("#slider").property("value", [+e,+e]);
 $('#slider').empty();
 $("#slider").attr("style","width:970px");
  slidr = d3.slider()
